@@ -21,7 +21,8 @@ export type Action =
   | { type: 'INIT_FAILURE' }
   | { type: 'DRAW_START' }
   | { type: 'DRAW_SUCCESS'; card: Card; remaining: number }
-  | { type: 'DRAW_FAILURE' };
+  | { type: 'DRAW_FAILURE' }
+  | { type: 'RESET' };
 
 export const initialState: GameState = {
   deckId: null,
@@ -79,5 +80,8 @@ export const reducer = (state: GameState, action: Action): GameState => {
         isDrawing: false,
         error: 'Failed to draw card. Please try again.',
       };
+
+    case 'RESET':
+      return { ...initialState };
   }
 };

@@ -20,6 +20,13 @@ const Table: React.FC = () => {
       .catch(() => dispatch({ type: 'INIT_FAILURE' }));
   }, []);
 
+  const handleReset = () => {
+    dispatch({ type: 'RESET' });
+    initializeDeck()
+      .then(data => dispatch({ type: 'INIT_SUCCESS', deckId: data.deck_id }))
+      .catch(() => dispatch({ type: 'INIT_FAILURE' }));
+  };
+
   const handleDraw = async () => {
     if (!deckId || isDrawing) return;
     dispatch({ type: 'DRAW_START' });
@@ -92,11 +99,16 @@ const Table: React.FC = () => {
             )}
 
             {gameOver && (
-              <div className={styles.summary} role="region" aria-label="Game summary">
-                <h2>Game Over!</h2>
-                <p>Total value matches: <strong>{totalValueMatches}</strong></p>
-                <p>Total suit matches: <strong>{totalSuitMatches}</strong></p>
-              </div>
+              <>
+                <div className={styles.summary} role="region" aria-label="Game summary">
+                  <h2>Game Over!</h2>
+                  <p>Total value matches: <strong>{totalValueMatches}</strong></p>
+                  <p>Total suit matches: <strong>{totalSuitMatches}</strong></p>
+                </div>
+                <button className={styles.drawButton} onClick={handleReset}>
+                  Play Again
+                </button>
+              </>
             )}
           </>
         )}

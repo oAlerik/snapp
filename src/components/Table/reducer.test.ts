@@ -110,6 +110,24 @@ describe('reducer', () => {
     });
   });
 
+  describe('RESET', () => {
+    it('returns state to initial', () => {
+      let state: GameState = { ...initialState, isInitializing: false, deckId: 'abc123' };
+      state = reducer(state, { type: 'DRAW_SUCCESS', card: makeCard('5', 'HEARTS'), remaining: 51 });
+      state = reducer(state, { type: 'DRAW_SUCCESS', card: makeCard('5', 'SPADES'), remaining: 50 });
+      state = reducer(state, { type: 'RESET' });
+      expect(state).toEqual(expect.objectContaining({
+        currentCard: null,
+        previousCard: null,
+        drawnCount: 0,
+        totalValueMatches: 0,
+        totalSuitMatches: 0,
+        drawCounts: { byValue: {}, bySuit: {} },
+        isInitializing: true,
+      }));
+    });
+  });
+
   describe('DRAW_FAILURE', () => {
     it('clears isDrawing and sets an error message', () => {
       const drawing: GameState = { ...initialState, isDrawing: true };
