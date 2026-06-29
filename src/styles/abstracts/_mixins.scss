@@ -1,0 +1,38 @@
+// colours
+$green: #1a6b38;
+$darkGreen: #0d4020;
+$gold: #ffd700;
+
+$border-radius: 6px;
+
+// mixins
+@mixin Flex($alignment: unset, $justfication: unset, $direction: row) {
+	display: flex;
+	align-items: $alignment;
+	justify-content: $justfication;
+	flex-direction: $direction;
+}
+
+@mixin Mobile() {
+	@media only screen and (max-width: 700px) {
+		@content;
+	}
+}
+
+@mixin Tablet() {
+	@media only screen and (min-width: 700px) and (max-width: 1030px) {
+		@content;
+	}
+}
+
+@mixin NonDesktop() {
+	@media only screen and (max-width: 1030px) {
+		@content;
+	}
+}
+
+@mixin Desktop() {
+	@media only screen and (min-width: 1030px) {
+		@content;
+	}
+}
