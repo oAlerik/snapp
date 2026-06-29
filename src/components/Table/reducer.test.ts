@@ -100,12 +100,13 @@ describe('reducer', () => {
       expect(state.totalSuitMatches).toBe(1);
     });
 
-    it('appends drawn card to drawnCards history', () => {
+    it('tracks draw counts by value and suit', () => {
       let state = ready;
       state = reducer(state, { type: 'DRAW_SUCCESS', card: firstCard, remaining: 51 });
-      state = reducer(state, { type: 'DRAW_SUCCESS', card: makeCard('7', 'CLUBS'), remaining: 50 });
-      expect(state.drawnCards).toHaveLength(2);
-      expect(state.drawnCards[0]).toEqual(firstCard);
+      state = reducer(state, { type: 'DRAW_SUCCESS', card: makeCard('5', 'CLUBS'), remaining: 50 });
+      expect(state.drawCounts.byValue['5']).toBe(2);
+      expect(state.drawCounts.bySuit['HEARTS']).toBe(1);
+      expect(state.drawCounts.bySuit['CLUBS']).toBe(1);
     });
   });
 

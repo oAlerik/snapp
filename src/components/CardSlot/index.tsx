@@ -1,5 +1,6 @@
 import { Card } from '../../types';
 import styles from './CardSlot.module.scss';
+import acePlaceholder from '../../assets/images/ace.png';
 
 interface Props {
   card: Card | null;
@@ -16,7 +17,13 @@ const CardSlot = ({ card, label }: Props) => (
         alt={`${card.value} of ${card.suit}`}
       />
     ) : (
-      <div className={styles.placeholder} aria-label="No card yet" />
+      <div className={styles.placeholder} aria-label="No card yet">
+        <img
+          src={acePlaceholder}
+          alt="placeholder-icon"
+          className={styles.acePlaceholder}
+        />
+      </div>
     )}
   </div>
 );

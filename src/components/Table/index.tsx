@@ -10,7 +10,7 @@ const Table: React.FC = () => {
 
   const {
     deckId, currentCard, previousCard, remaining, drawnCount,
-    snapMessage, totalValueMatches, totalSuitMatches, drawnCards,
+    snapMessage, totalValueMatches, totalSuitMatches, drawCounts,
     isInitializing, isDrawing, error,
   } = state;
 
@@ -34,7 +34,7 @@ const Table: React.FC = () => {
   const gameOver = remaining === 0 && drawnCount > 0;
   const probability =
     currentCard && !gameOver
-      ? calculateProbability(currentCard, drawnCards, remaining)
+      ? calculateProbability(currentCard, drawCounts, remaining)
       : null;
 
   return (

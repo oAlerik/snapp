@@ -8,6 +8,11 @@ export const checkSnap = (current: Card, previous: Card): SnapResult => {
   return null;
 };
 
+export interface DrawCounts {
+  byValue: Record<string, number>;
+  bySuit: Record<string, number>;
+}
+
 export interface Probability {
   value: number;
   suit: number;
@@ -15,13 +20,13 @@ export interface Probability {
 
 export const calculateProbability = (
   currentCard: Card,
-  drawnCards: Card[],
+  drawCounts: DrawCounts,
   remaining: number
 ): Probability => {
   if (remaining === 0) return { value: 0, suit: 0 };
 
-  const valueDrawn = drawnCards.filter(c => c.value === currentCard.value).length;
-  const suitDrawn = drawnCards.filter(c => c.suit === currentCard.suit).length;
+  const valueDrawn = drawCounts.byValue[currentCard.value] ?? 0;
+  const suitDrawn = drawCounts.bySuit[currentCard.suit] ?? 0;
 
   return {
     value: Math.max(0, 4 - valueDrawn) / remaining,

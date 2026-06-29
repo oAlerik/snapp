@@ -7,6 +7,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @include Mobile() {
+    height: auto;
+    min-height: 100svh;
+    align-items: flex-start;
+  }
 }
 
 .playMat {
@@ -17,14 +23,31 @@
   border-radius: $border-radius;
   min-width: 60ch;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-}
 
-.title {
-  margin: 0;
-  color: $gold;
-  font-size: 2.5rem;
-  letter-spacing: 0.15em;
-  text-shadow: 0 0 20px $gold-glow;
+  @include Tablet() {
+    min-width: unset;
+    width: 80%;
+  }
+
+  @include Mobile() {
+    min-width: unset;
+    width: 100%;
+    padding: 1.25rem 1rem;
+    border-radius: 0;
+    gap: 1rem;
+  }
+
+	.title {
+		margin: 0;
+		color: $gold;
+		font-size: 2.5rem;
+		letter-spacing: 0.15em;
+		text-shadow: 0 0 20px $gold-glow;
+
+		@include Mobile() {
+			font-size: 1.75rem;
+		}
+	}
 }
 
 .status {
@@ -51,6 +74,10 @@
   @include Flex(flex-end, space-around);
   width: 100%;
   gap: 2rem;
+
+  @include Mobile() {
+    gap: 1rem;
+  }
 }
 
 .snapMessage {
@@ -81,6 +108,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   transition: opacity 0.15s;
+	margin-top: 1rem;
 
   &:hover:not(:disabled) {
     opacity: 0.85;

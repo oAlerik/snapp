@@ -1,5 +1,5 @@
 import { Card } from '../../types';
-import { checkSnap, SnapResult } from '../../utils/game';
+import { checkSnap, SnapResult, DrawCounts } from '../../utils/game';
 
 export interface GameState {
   deckId: string | null;
@@ -10,7 +10,7 @@ export interface GameState {
   snapMessage: SnapResult;
   totalValueMatches: number;
   totalSuitMatches: number;
-  drawnCards: Card[];
+  drawCounts: DrawCounts;
   isInitializing: boolean;
   isDrawing: boolean;
   error: string | null;
@@ -32,7 +32,7 @@ export const initialState: GameState = {
   snapMessage: null,
   totalValueMatches: 0,
   totalSuitMatches: 0,
-  drawnCards: [],
+  drawCounts: { byValue: {}, bySuit: {} },
   isInitializing: true,
   isDrawing: false,
   error: null,
@@ -55,6 +55,7 @@ export const reducer = (state: GameState, action: Action): GameState => {
 
     case 'DRAW_SUCCESS': {
       const snap = state.currentCard ? checkSnap(action.card, state.currentCard) : null;
+      const { byValue, bySuit } = state.drawCounts;
       return {
         ...state,
         isDrawing: false,
@@ -63,7 +64,10 @@ export const reducer = (state: GameState, action: Action): GameState => {
         remaining: action.remaining,
         drawnCount: state.drawnCount + 1,
         snapMessage: snap,
-        drawnCards: [...state.drawnCards, action.card],
+        drawCounts: {
+          byValue: { ...byValue, [action.card.value]: (byValue[action.card.value] ?? 0) + 1 },
+          bySuit: { ...bySuit, [action.card.suit]: (bySuit[action.card.suit] ?? 0) + 1 },
+        },
         totalValueMatches: state.totalValueMatches + (snap === 'SNAP VALUE!' ? 1 : 0),
         totalSuitMatches: state.totalSuitMatches + (snap === 'SNAP SUIT!' ? 1 : 0),
       };

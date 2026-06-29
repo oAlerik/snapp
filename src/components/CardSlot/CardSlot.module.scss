@@ -19,12 +19,30 @@
   border-radius: 8px;
   object-fit: contain;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+
+  @include Mobile() {
+    width: 90px;
+    height: 126px;
+  }
 }
 
 .placeholder {
+  @include Flex(center, center);
   width: 120px;
   height: 168px;
   border-radius: 8px;
   border: 2px dashed $placeholder-border;
   background: $placeholder-bg;
+  user-select: none;
+
+  @include Mobile() {
+    width: 90px;
+    height: 126px;
+  }
+
+  .acePlaceholder {
+    pointer-events: none;
+    opacity: 0.35;
+    max-height: 50%;
+  }
 }

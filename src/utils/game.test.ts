@@ -1,4 +1,4 @@
-import { checkSnap, calculateProbability } from './game';
+import { checkSnap, calculateProbability, DrawCounts } from './game';
 import { Card } from '../types';
 
 const makeCard = (value: string, suit: string): Card => ({
@@ -7,6 +7,15 @@ const makeCard = (value: string, suit: string): Card => ({
   value,
   suit,
 });
+
+const makeCounts = (cards: Card[]): DrawCounts =>
+  cards.reduce<DrawCounts>(
+    (acc, c) => ({
+      byValue: { ...acc.byValue, [c.value]: (acc.byValue[c.value] ?? 0) + 1 },
+      bySuit: { ...acc.bySuit, [c.suit]: (acc.bySuit[c.suit] ?? 0) + 1 },
+    }),
+    { byValue: {}, bySuit: {} }
+  );
 
 describe('checkSnap', () => {
   it('returns SNAP VALUE! when card values match', () => {
@@ -37,46 +46,38 @@ describe('checkSnap', () => {
 describe('calculateProbability', () => {
   it('returns zero probability when no cards remain', () => {
     const card = makeCard('5', 'HEARTS');
-    expect(calculateProbability(card, [card], 0)).toEqual({ value: 0, suit: 0 });
+    expect(calculateProbability(card, makeCounts([card]), 0)).toEqual({ value: 0, suit: 0 });
   });
 
   it('calculates correct value probability after drawing one card of that value', () => {
     const current = makeCard('5', 'HEARTS');
-    const prob = calculateProbability(current, [current], 51);
-    // 3 fives remain out of 51 cards
+    const prob = calculateProbability(current, makeCounts([current]), 51);
     expect(prob.value).toBeCloseTo(3 / 51);
   });
 
   it('calculates correct suit probability after drawing one card of that suit', () => {
     const current = makeCard('5', 'HEARTS');
-    const prob = calculateProbability(current, [current], 51);
-    // 12 hearts remain out of 51 cards
+    const prob = calculateProbability(current, makeCounts([current]), 51);
     expect(prob.suit).toBeCloseTo(12 / 51);
   });
 
   it('accounts for multiple drawn cards of the same value', () => {
     const current = makeCard('5', 'HEARTS');
     const drawn = [makeCard('5', 'CLUBS'), makeCard('5', 'DIAMONDS'), current];
-    const prob = calculateProbability(current, drawn, 49);
-    // 1 five remains out of 49 cards
+    const prob = calculateProbability(current, makeCounts(drawn), 49);
     expect(prob.value).toBeCloseTo(1 / 49);
   });
 
   it('returns zero value probability when all cards of that value are drawn', () => {
     const current = makeCard('5', 'HEARTS');
-    const drawn = [
-      makeCard('5', 'CLUBS'),
-      makeCard('5', 'DIAMONDS'),
-      makeCard('5', 'SPADES'),
-      current,
-    ];
-    const prob = calculateProbability(current, drawn, 48);
+    const drawn = [makeCard('5', 'CLUBS'), makeCard('5', 'DIAMONDS'), makeCard('5', 'SPADES'), current];
+    const prob = calculateProbability(current, makeCounts(drawn), 48);
     expect(prob.value).toBe(0);
   });
 
   it('calculates probability correctly at game start (first card drawn)', () => {
     const current = makeCard('ACE', 'SPADES');
-    const prob = calculateProbability(current, [current], 51);
+    const prob = calculateProbability(current, makeCounts([current]), 51);
     expect(prob.value).toBeCloseTo(3 / 51);
     expect(prob.suit).toBeCloseTo(12 / 51);
   });
