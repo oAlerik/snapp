@@ -1,7 +1,33 @@
-// colours
-$green: #1a6b38;
-$darkGreen: #0d4020;
+// Background
+$table: #1a6b38;
+$table-deep: #0d4020;
+
+// Text
+$text: #ffffff;
+$text-muted: #ffffffa6;
+
+// Accent
 $gold: #ffd700;
+$gold-dark: #a87800;
+$gold-glow: #ffd7008c;
+
+// Snap messages
+$snap-value: #ffd700;
+$snap-suit: #ff6b6b;
+$snap-suit-glow: #ff6b6b8c;
+
+// UI states
+$error: #ff6b6b;
+$error-bg: #ff6b6b1f;
+$error-border: #ff6b6b59;
+
+// Card slot
+$placeholder-border: #ffffff4d;
+$placeholder-bg: #00000033;
+
+// Overlays / glass
+$glass-bg: #ffffff1a;
+$glass-border: #ffffff33;
 
 $border-radius: 6px;
 
