@@ -1,0 +1,43 @@
+@use 'styles/abstracts' as *;
+
+.wrapper {
+  @include Flex(center, center, column);
+  gap: 1rem;
+}
+
+.summary {
+  @include Flex(center, center, column);
+  gap: 0.5rem;
+  text-align: center;
+  background: $glass-bg;
+  border: 1px solid $glass-border;
+  border-radius: $border-radius;
+  padding: 1.5rem 2rem;
+  color: $text;
+
+  h2 {
+    margin: 0;
+    color: $gold;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.playAgain {
+  padding: 0.75rem 2.5rem;
+  font-size: 1.1rem;
+  background: $gold;
+  color: $gold-dark;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}

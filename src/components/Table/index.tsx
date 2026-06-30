@@ -1,7 +1,8 @@
 import { useEffect, useReducer } from 'react';
 import styles from './Table.module.scss';
-import { initializeDeck, drawCard } from '../../api/deckApi';
+import { initializeDeck, reshuffleDeck, drawCard } from '../../api/deckApi';
 import CardSlot from '../CardSlot';
+import GameSummary from '../GameSummary';
 import { calculateProbability } from '../../utils/game';
 import { reducer, initialState } from './reducer';
 import loader from '../../assets/images/loader.svg';
@@ -22,8 +23,9 @@ const Table: React.FC = () => {
   }, []);
 
   const handleReset = () => {
+    const previousDeckId = deckId!;
     dispatch({ type: 'RESET' });
-    initializeDeck()
+    reshuffleDeck(previousDeckId)
       .then(data => dispatch({ type: 'INIT_SUCCESS', deckId: data.deck_id }))
       .catch(() => dispatch({ type: 'INIT_FAILURE' }));
   };
@@ -52,10 +54,10 @@ const Table: React.FC = () => {
 
         {isInitializing && (
 					<>
-						<img 
+						<img
 							src={loader}
 							alt="loading..."
-							className={styles.loader}	
+							className={styles.loader}
 						/>
 						<p className={styles.status}>Shuffling deck...</p>
 					</>
@@ -109,16 +111,11 @@ const Table: React.FC = () => {
             )}
 
             {gameOver && (
-              <>
-                <div className={styles.summary} role="region" aria-label="Game summary">
-                  <h2>Game Over!</h2>
-                  <p>Total value matches: <strong>{totalValueMatches}</strong></p>
-                  <p>Total suit matches: <strong>{totalSuitMatches}</strong></p>
-                </div>
-                <button className={styles.drawButton} onClick={handleReset}>
-                  Play Again
-                </button>
-              </>
+              <GameSummary
+                totalValueMatches={totalValueMatches}
+                totalSuitMatches={totalSuitMatches}
+                onPlayAgain={handleReset}
+              />
             )}
           </>
         )}

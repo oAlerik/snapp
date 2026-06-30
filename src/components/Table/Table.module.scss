@@ -138,26 +138,6 @@
   }
 }
 
-.summary {
-  @include Flex(center, center, column);
-  gap: 0.5rem;
-  text-align: center;
-  background: $glass-bg;
-  border: 1px solid $glass-border;
-  border-radius: $border-radius;
-  padding: 1.5rem 2rem;
-  color: $text;
-
-  h2 {
-    margin: 0;
-    color: $gold;
-  }
-
-  p {
-    margin: 0;
-  }
-}
-
 @keyframes spin {
   from {
     transform: rotate(0deg);
