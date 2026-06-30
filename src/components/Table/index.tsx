@@ -4,6 +4,7 @@ import { initializeDeck, drawCard } from '../../api/deckApi';
 import CardSlot from '../CardSlot';
 import { calculateProbability } from '../../utils/game';
 import { reducer, initialState } from './reducer';
+import loader from '../../assets/images/loader.svg';
 
 const Table: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -47,9 +48,18 @@ const Table: React.FC = () => {
   return (
     <div className={styles.table}>
       <div className={styles.playMat}>
-        <h1 className={styles.title}>SNAP!</h1>
+				<h1 className={styles.title}>SNAP!</h1>
 
-        {isInitializing && <p className={styles.status}>Shuffling deck...</p>}
+        {isInitializing && (
+					<>
+						<img 
+							src={loader}
+							alt="loading..."
+							className={styles.loader}	
+						/>
+						<p className={styles.status}>Shuffling deck...</p>
+					</>
+				)}
         {error && (
           <p className={styles.error} role="alert">
             {error}
