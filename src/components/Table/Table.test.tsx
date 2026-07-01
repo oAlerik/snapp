@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import Table from './';
 import { initializeDeck, drawCard } from '../../api/deckApi';
 
@@ -17,12 +17,21 @@ const drawResponse = (value: string, suit: string, remaining: number) => ({
 });
 
 beforeEach(() => {
+  jest.useFakeTimers();
   mockInitializeDeck.mockResolvedValue(mockDeck);
 });
 
 afterEach(() => {
+  jest.runOnlyPendingTimers();
+  jest.useRealTimers();
   jest.clearAllMocks();
 });
+
+const waitForDeckReady = async () => {
+  await act(async () => {
+    jest.advanceTimersByTime(2000);
+  });
+};
 
 describe('Table', () => {
   it('shows loading state while deck initialises', () => {
@@ -33,7 +42,8 @@ describe('Table', () => {
 
   it('shows Draw Card button once deck is ready', async () => {
     render(<Table />);
-    expect(await screen.findByRole('button', { name: /draw card/i })).toBeInTheDocument();
+    await waitForDeckReady();
+    expect(screen.getByRole('button', { name: /draw card/i })).toBeInTheDocument();
   });
 
   it('shows error alert when initialisation fails', async () => {
@@ -45,20 +55,22 @@ describe('Table', () => {
   it('displays the drawn card image after clicking Draw Card', async () => {
     mockDrawCard.mockResolvedValue(drawResponse('5', 'HEARTS', 51));
     render(<Table />);
-    fireEvent.click(await screen.findByRole('button', { name: /draw card/i }));
+    await waitForDeckReady();
+    fireEvent.click(screen.getByRole('button', { name: /draw card/i }));
     expect(await screen.findByAltText('5 of HEARTS')).toBeInTheDocument();
   });
 
   it('shows placeholders for both card slots before first draw', async () => {
     render(<Table />);
-    await screen.findByRole('button', { name: /draw card/i });
+    await waitForDeckReady();
     expect(screen.getAllByLabelText('No card yet')).toHaveLength(2);
   });
 
   it('removes the Draw Card button and shows summary when all cards are drawn', async () => {
     mockDrawCard.mockResolvedValue(drawResponse('5', 'HEARTS', 0));
     render(<Table />);
-    fireEvent.click(await screen.findByRole('button', { name: /draw card/i }));
+    await waitForDeckReady();
+    fireEvent.click(screen.getByRole('button', { name: /draw card/i }));
     const summary = await screen.findByRole('region', { name: /game summary/i });
     expect(summary).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /draw card/i })).not.toBeInTheDocument();
@@ -67,7 +79,8 @@ describe('Table', () => {
   it('shows error alert when a draw fails', async () => {
     mockDrawCard.mockRejectedValue(new Error('Network error'));
     render(<Table />);
-    fireEvent.click(await screen.findByRole('button', { name: /draw card/i }));
+    await waitForDeckReady();
+    fireEvent.click(screen.getByRole('button', { name: /draw card/i }));
     expect(await screen.findByRole('alert')).toHaveTextContent(/failed to draw/i);
   });
 });

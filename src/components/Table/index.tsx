@@ -6,7 +6,7 @@ import CardSlot from '../CardSlot';
 import GameSummary from '../GameSummary';
 import { calculateProbability } from '../../utils/game';
 import { reducer, initialState } from './reducer';
-import loader from '../../assets/images/loader.svg';
+import ShuffleAnimation from '../ShuffleAnimation';
 
 const Table: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -17,17 +17,19 @@ const Table: React.FC = () => {
     isInitializing, isDrawing, error,
   } = state;
 
+  const minDelay = () => new Promise<void>(resolve => setTimeout(resolve, 2000));
+
   useEffect(() => {
-    initializeDeck()
-      .then(data => dispatch({ type: 'INIT_SUCCESS', deckId: data.deck_id }))
+    Promise.all([initializeDeck(), minDelay()])
+      .then(([data]) => dispatch({ type: 'INIT_SUCCESS', deckId: data.deck_id }))
       .catch(() => dispatch({ type: 'INIT_FAILURE' }));
   }, []);
 
   const handleReset = () => {
     const previousDeckId = deckId!;
     dispatch({ type: 'RESET' });
-    reshuffleDeck(previousDeckId)
-      .then(data => dispatch({ type: 'INIT_SUCCESS', deckId: data.deck_id }))
+    Promise.all([reshuffleDeck(previousDeckId), minDelay()])
+      .then(([data]) => dispatch({ type: 'INIT_SUCCESS', deckId: data.deck_id }))
       .catch(() => dispatch({ type: 'INIT_FAILURE' }));
   };
 
@@ -55,11 +57,7 @@ const Table: React.FC = () => {
 
         {isInitializing && (
 					<>
-						<img
-							src={loader}
-							alt="loading..."
-							className={styles.loader}
-						/>
+						<ShuffleAnimation />
 						<p className={styles.status}>Shuffling deck...</p>
 					</>
 				)}
@@ -94,7 +92,7 @@ const Table: React.FC = () => {
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                    transition={{ duration: 0.1, ease: 'easeOut' }}
                   >
                     {snapMessage}
                   </motion.p>

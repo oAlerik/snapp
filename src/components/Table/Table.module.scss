@@ -50,12 +50,6 @@
   }
 }
 
-.loader {
-  width: 64px;
-  height: 64px;
-  animation: spin 2s linear infinite;
-}
-
 .status {
   color: $text-muted;
   margin: 0;
@@ -143,14 +137,5 @@
 
   p {
     margin: 0;
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }
