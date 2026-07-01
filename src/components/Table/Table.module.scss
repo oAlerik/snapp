@@ -86,6 +86,14 @@
   }
 }
 
+.snapContainer {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
 .snapMessage {
   font-size: 1.5rem;
   font-weight: 700;

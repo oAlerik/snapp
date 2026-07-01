@@ -1,4 +1,5 @@
 import { useEffect, useReducer } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Table.module.scss';
 import { initializeDeck, reshuffleDeck, drawCard } from '../../api/deckApi';
 import CardSlot from '../CardSlot';
@@ -81,16 +82,25 @@ const Table: React.FC = () => {
               <CardSlot card={currentCard} label="Current Card" />
             </div>
 
-            {snapMessage && (
-              <p
-                className={`${styles.snapMessage} ${
-                  snapMessage === 'SNAP VALUE!' ? styles.snapValue : styles.snapSuit
-                }`}
-                role="status"
-              >
-                {snapMessage}
-              </p>
-            )}
+            <div className={styles.snapContainer}>
+              <AnimatePresence mode="wait">
+                {snapMessage && (
+                  <motion.p
+                    key={snapMessage}
+                    className={`${styles.snapMessage} ${
+                      snapMessage === 'SNAP VALUE!' ? styles.snapValue : styles.snapSuit
+                    }`}
+                    role="status"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                  >
+                    {snapMessage}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
 
             {!gameOver && (
               <button
